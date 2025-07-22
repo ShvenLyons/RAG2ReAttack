@@ -20,6 +20,6 @@ In order to verify different attacks against RAG
 ├── eval_input/            ← 评测输入
 ├── datastore/             ← 检索存储/缓存等
 ./keys/
-├── mine.txt               ← 存放API Token Key
+├── API_Token_Key.txt      ← 存放API Token Key
 ```
 
