@@ -76,7 +76,7 @@ class BM25Index(Index):
             print(f"==> {len(tokens_as_chunks)} chunks in total.")
 
             # Step 3：将 token 块转换为 JSONL 格式，供 Pyserini 建索引使用
-            self.tokens_dir = os.path.join(datastore_dir, "tokens")
+            self.tokens_dir = os.path.join(datastore_dir, "tokens").replace("\\", "/")
             os.makedirs(self.tokens_dir, exist_ok=True)
             with open(os.path.join(self.tokens_dir, "data.jsonl"), "w") as f:
                 for chunk_id, token_chunk in enumerate(tokens_as_chunks):
@@ -89,14 +89,14 @@ class BM25Index(Index):
                     })+"\n")
         
             # Step 4：调用 Pyserini 命令行接口构建 Lucene 索引
-            print("==> Start building index for %s at %s" % (self.tokens_dir, datastore_dir))
+            print("==> Start building index for %s at %s" % (self.tokens_dir.replace("\\", "/"), datastore_dir.replace("\\", "/")))
             command = """python -m pyserini.index.lucene \
             --collection JsonCollection \
             --input '%s' \
             --index '%s' \
             --generator DefaultLuceneDocumentGenerator \
-            --storeRaw --threads 1""" % (self.tokens_dir, datastore_dir)
-            ret_code = subprocess.run([command],
+            --storeRaw --threads 1""" % (self.tokens_dir.replace("\\", "/"), datastore_dir.replace("\\", "/"))
+            ret_code = subprocess.run(command,
                                       shell=True,
                                       # stdout=subprocess.DEVNULL,
                                       # stderr=subprocess.STDOUT
