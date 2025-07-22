@@ -5,9 +5,8 @@ from FlagEmbedding import FlagReranker
 from sentence_transformers import SentenceTransformer
 
 import os
+import re
 from typing import List
-import wandb
-wandb.init(mode="disabled") 
 import logging
 logger = logging.getLogger(__name__)
 import requests
@@ -43,8 +42,11 @@ class RICLM(RALM):
         # 初始化 BM25 索引（Pyserini 实现）
         assert data_args.raw_data_dir is not None
         data_src_name = data_args.raw_data_dir.split("/")[-1]
-        datastore_path = os.path.join(data_args.datastore_root, f"RIC_LM+{data_src_name}+{lm.model_name}+{ric_args.max_retrieval_seq_length}+{ric_args.ric_stride}")
-        
+        safe_model_name = re.sub(r"[^a-zA-Z0-9_/-]", "_", lm.model_name)
+        datastore_path = os.path.join(
+            data_args.datastore_root,
+            f"RIC_LM_{data_src_name}_{safe_model_name}_{ric_args.max_retrieval_seq_length}_{ric_args.ric_stride}"
+        )
         #! index could be: BM25Index, VectorStoreIndex (from llama_index) 
         if ric_args.index_name == 'bm25':
             # 基于 tokenizer 分块，构建 Lucene 索引
