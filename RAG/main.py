@@ -12,6 +12,9 @@ import os
 import json
 from tqdm import tqdm  # 用于进度条显示
 import warnings
+import re
+def safe_filename(name):
+    return re.sub(r'[<>:"/\\|?*]', '_', name)
 warnings.filterwarnings("ignore")
 
 # 主函数，接收多个参数组：用户参数、LLM参数、RIC参数、kNN参数、训练参数、数据参数
@@ -37,7 +40,8 @@ def main(my_args, llm_args, ric_args, training_args, data_args):
             ric_lm = EmbeddingRICLM(ric_args=ric_args, data_args=data_args, lm=lm)
         print("\nRICLM 初始化完成...\n")
         # 设置输出目录（按模型名分目录）
-        io_results_dir = os.path.join(data_args.io_output_root, ric_lm.lm.model_name)
+        model_name_safe = safe_filename(ric_lm.lm.model_name)
+        io_results_dir = os.path.join(data_args.io_output_root, model_name_safe)
         os.makedirs(io_results_dir, exist_ok=True)
         # 加载输入数据（通常是一个 query 列表）
         js = read_json(data_args.io_input_path)
