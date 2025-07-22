@@ -18,7 +18,7 @@ class LM(object):
         if my_args.api == 'hf':
             # 加载 tokenizer 和模型
             self.tokenizer = AutoTokenizer.from_pretrained(llm_args.hf_ckpt)
-            self.model = AutoModelForCausalLM.from_pretrained(llm_args.hf_ckpt, device_map='auto').cuda().eval()
+            self.model = AutoModelForCausalLM.from_pretrained(llm_args.hf_ckpt, device_map='auto').eval()
             # 调整词表大小（防止 tokenizer 扩展）
             self.model.resize_token_embeddings(len(self.tokenizer))
             # 设置文本生成的超参数配置
