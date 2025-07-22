@@ -3,8 +3,7 @@ In order to verify different attacks against RAG
 
 # 项目结构说明
 ```text
-./RAG/
-├── main.py                ← 主执行逻辑
+./main.py                  ← 主执行逻辑
 ./utils/
 ├── argparser.py           ← 参数解析工具
 ├── helpers.py             ← 辅助函数
